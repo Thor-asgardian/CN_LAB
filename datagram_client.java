@@ -1,30 +1,33 @@
 import java.net.*;
-import java.io.*;
 import java.util.Scanner;
 
 public class DatagramClient {
     public static void main(String[] args) {
-        final String SERVER_IP = "localhost";
-        final int SERVER_PORT = 9876;
+        try {
+            DatagramSocket clientSocket = new DatagramSocket();
 
-        try (DatagramSocket socket = new DatagramSocket()) {
-            InetAddress serverAddress = InetAddress.getByName(SERVER_IP);
             Scanner scanner = new Scanner(System.in);
 
             while (true) {
-                System.out.print("Enter a message to send to the server (or type 'exit' to quit): ");
+                System.out.print("Enter a message to send to the server: ");
                 String message = scanner.nextLine();
+                byte[] sendData = message.getBytes();
+
+                InetAddress serverAddress = InetAddress.getByName("localhost");
+                int serverPort = 9876;
+
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, serverPort);
+                clientSocket.send(sendPacket);
 
                 if (message.equalsIgnoreCase("exit")) {
+                    System.out.println("Client is exiting.");
                     break;
                 }
-
-                byte[] sendData = message.getBytes();
-                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, serverAddress, SERVER_PORT);
-
-                socket.send(sendPacket);
             }
-        } catch (IOException e) {
+
+            scanner.close();
+            clientSocket.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
