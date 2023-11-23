@@ -1,49 +1,75 @@
-# Create a simulator object
+# Create Simulator
 set ns [new Simulator]
 
-# Enable tracing of events
-set tracefile [open three_node_network.tr w]
-$ns trace-all $tracefile
+# Open Trace file and NAM file
+set ntrace [open prog1.tr w]
+$ns trace-all $ntrace
 
-# Create three nodes
-set node(0) [$ns node]
-set node(1) [$ns node]
-set node(2) [$ns node]
+set namfile [open prog1.nam w]
+$ns namtrace-all $namfile
 
-# Create duplex links between nodes
-set link(0) [$ns duplex-link $node(0) $node(1) 10Mb 5ms DropTail]
-set link(1) [$ns duplex-link $node(1) $node(2) 5Mb 10ms DropTail]
+# Finish Procedure
+proc Finish {} {
+    global ns ntrace namfile
 
-# Set the queue size for the links
-$link(0) queue-limit 10
-$link(1) queue-limit 5
+    # Dump trace data and close files
+    $ns flush-trace
+    close $ntrace
+    close $namfile
 
-# Create a TCP traffic source and sink
-set tcp_source [new Agent/TCP]
-set tcp_sink [new Agent/TCPSink]
+    # Execute nam animation file
+    exec nam prog1.nam &
 
-# Attach the TCP agents to the nodes
-$ns attach-agent $node(0) $tcp_source
-$ns attach-agent $node(2) $tcp_sink
+    # Show the number of packets dropped
+    exec echo "The number of packet drops is " & exec grep -c "^d" prog1.tr &
 
-# Create a traffic source and attach it to the TCP agent
-set traffic_source [new Application/Traffic/CBR]
-$traffic_source attach-agent $tcp_source
+    exit 0
+}
 
-# Set the parameters for the traffic source
-$traffic_source set type_ CBR
-$traffic_source set packetSize_ 1000
-$traffic_source set rate_ 1mb
-$traffic_source set interval_ 0.01
+# Create 3 nodes
+set n0 [$ns node]
+set n1 [$ns node]
+set n2 [$ns node]
 
-# Schedule the traffic source to start at time 1.0s
-$ns at 1.0 "$traffic_source start"
+# Label the nodes
+$n0 label "TCP Source"
+$n2 label "Sink"
 
-# Schedule the simulation to run for 5 seconds
-$ns at 5.0 "$ns stop"
+# Set the color
+$ns color 1 blue
 
-# Run the simulation
+# Create Links between nodes
+$ns duplex-link $n0 $n1 1Mb 10ms DropTail
+$ns duplex-link $n1 $n2 1Mb 10ms DropTail
+
+# Make the Link Orientation
+$ns duplex-link-op $n0 $n1 orient right
+$ns duplex-link-op $n1 $n2 orient right
+
+# Set Queue Size
+$ns queue-limit $n0 $n1 10
+$ns queue-limit $n1 $n2 10
+
+# Set up a Transport layer connection
+set tcp0 [new Agent/TCP]
+$ns attach-agent $n0 $tcp0
+
+set sink0 [new Agent/TCPSink]
+$ns attach-agent $n2 $sink0
+$ns connect $tcp0 $sink0
+
+# Set up an Application layer Traffic
+set cbr0 [new Application/Traffic/CBR]
+$cbr0 set type_ CBR
+$cbr0 set packetSize_ 100
+$cbr0 set rate_ 1Mb
+$cbr0 set random_ false
+$cbr0 attach-agent $tcp0
+$tcp0 set class_ 1
+
+# Schedule Events
+$ns at 0.0 "$cbr0 start"
+$ns at 5.0 "Finish"
+
+# Run the Simulation
 $ns run
-
-# Close the trace file
-close $tracefile
