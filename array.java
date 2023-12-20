@@ -1,83 +1,49 @@
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
-class Packet {
-    int SeqNum;
-    String Data;
-
-    public Packet(int SeqNum, String Data) {
-        this.SeqNum = SeqNum;
-        this.Data = Data;
-    }
-}
-
-public class frame {
-    private static final int FSize = 3;
-
-    public static Packet[] divide(String msg) {
-        int msglen = msg.length();
-        int NoOfPacket = (int) Math.ceil((double) msglen / FSize);
-        Packet[] readdata = new Packet[NoOfPacket];
-        for (int i = 0, j = 0; i < NoOfPacket; i++) {
-            int end = Math.min(j + FSize, msglen);
-            readdata[i] = new Packet(i + 1, msg.substring(j, end));
-            j += FSize;
-        }
-        return readdata;
-    }
-
-    public static Packet[] shuffle(Packet[] readdata) {
-        Random rand = new Random();
-        Packet[] transdata = Arrays.copyOf(readdata, readdata.length);
-        for (int i = 0; i < transdata.length; i++) {
-            int trans = rand.nextInt(transdata.length);
-            Packet temp = transdata[i];
-            transdata[i] = transdata[trans];
-            transdata[trans] = temp;
-        }
-        return transdata;
-    }
-
-    public static void bubbleSort(Packet[] transdata) {
-        int n = transdata.length;
-        boolean swapped;
-        do {
-            swapped = false;
-            for (int i = 1; i < n; i++) { // Start from index 1, not 0
-                if (transdata[i - 1].SeqNum > transdata[i].SeqNum) {
-                    // Swap transdata[i-1] and transdata[i]
-                    Packet temp = transdata[i - 1];
-                    transdata[i - 1] = transdata[i];
-                    transdata[i] = temp;
-                    swapped = true;
-                }
-            }
-            n--;
-        } while (swapped);
-    }
-
-    public static void receiver(Packet[] transdata) {
-        System.out.println("\n Packets received in the following order:");
-        for (Packet packet : transdata) {
-            System.out.println(packet.SeqNum);
-        }
-        bubbleSort(transdata);
-        System.out.println("\n\nPackets in order after sorting:\n");
-        for (Packet packet : transdata) {
-            System.out.print(packet.Data);
-        }
-    }
-
-    public static void main(String[] args) {
-        String msg;
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter msg to transmit\n");
-        msg = sc.nextLine();
-        Packet[] readdata = divide(msg);
-        Packet[] transdata = shuffle(readdata);
-        receiver(transdata);
-
-        sc.close();
-    }
-}
+public class sort1{
+ public static void main(String[] args){
+ List<int[]> frame=new ArrayList<>();
+ System.out.println("Enter no. of frames:");
+ Scanner sc=new Scanner(System.in);
+ int n=sc.nextInt(); 
+ for(int i=0;i<n;i++){
+  Random random=new Random();
+  int seqNum=random.nextInt(1000)+1;
+  System.out.printf("Enter data for %dth frame>>",i+1);
+  int data=sc.nextInt();
+  frame.add(new int []{seqNum,data});
+ }
+ System.out.println("\n\nBefore Sorting>>a");
+ for(int[] i : frame){
+  System.out.printf("seqNum->%d,Data->%d\n",i[0] , i[1]);
+ }
+ frame=sortFrame(frame);
+ System.out.println("\n\n After sorting>>");
+ for(int[] i : frame){
+ System.out.printf("seqNum->%d,Data->%d\n",i[0] , i[1]);
+ }
+ }
+ 
+ public static List<int []>sortFrame(List<int[] >frame){
+  Collections.sort(frame,(a , b) -> Integer.compare(a[0] , b[0]));
+  return frame;
+  }
+ }
+/*
+Enter no. of frames:
+5
+Enter data for 1th frame>>1
+Enter data for 2th frame>>2
+Enter data for 3th frame>>3
+Enter data for 4th frame>>4
+Enter data for 5th frame>>5
+Before Sorting>>
+seqNum->624,Data->1
+seqNum->751,Data->2
+seqNum->418,Data->3
+seqNum->48,Data->4
+seqNum->964,Data->5After sorting>>
+seqNum->48,Data->4
+seqNum->418,Data->3seqNum->624,Data->1seqNum->751,Data->2
+seqNum->964,Data->5
+*/
