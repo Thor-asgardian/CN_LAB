@@ -82,3 +82,23 @@ public class Main {
         g.bellmanFord(src);
     }
 }
+/* output sample:
+Enter no. of vertices: 5
+Enter no. of edges: 8
+Enter source, destination, and weights of edges
+0 1 6
+0 2 7
+1 3 5
+1 4 -4
+1 2 8
+2 3 -3
+2 4 9
+3 4 7
+Enter source node: 0
+Vertex		Distance
+0		0
+1		1
+2		7
+3		4
+4		-2
+*/
