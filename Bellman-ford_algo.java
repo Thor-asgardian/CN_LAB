@@ -1,73 +1,43 @@
-import java.util.*;
+class Graph:
+    def __init__(self, v):
+        self.v = v
+        self.vertices = []
 
-class Edge {
-    int source, destination, weight;
+    def add_edge(self, s, d, w):
+        self.vertices.append([s, d, w])
 
-    public Edge(int source, int destination, int weight) {
-        this.source = source;
-        this.destination = destination;
-        this.weight = weight;
-    }
-}
+    def print_distance(self, dist):
+        print("Vertex\t\tDistance")
+        for i in range(self.v):
+            print(f"{i}\t\t{dist[i]}")
 
-class BellmanFord {
-    int V, E;
-    List<Edge> edges;
-    int[] distance;
+    def bellmanFord(self, src):
+        dist = [float('inf') for _ in range(self.v)]
+        dist[src] = 0
 
-    public BellmanFord(int V, int E) {
-        this.V = V;
-        this.E = E;
-        edges = new ArrayList<>();
-        distance = new int[V];
-    }
+        for _ in range(self.v - 1):
+            for s, d, w in self.vertices:
+                if dist[s] != float('inf') and dist[d] > dist[s] + w:
+                    dist[d] = dist[s] + w
 
-    void addEdge(int source, int destination, int weight) {
-        edges.add(new Edge(source, destination, weight));
-    }
+        for _ in range(self.v):  # Iterate one more time for negative cycle check
+            for s, d, w in self.vertices:
+                if dist[s] != float('inf') and dist[d] > dist[s] + w:
+                    print("Graph has negative cycle")
+                    return
 
-    void bellmanFord(int source) {
-        Arrays.fill(distance, Integer.MAX_VALUE);
-        distance[source] = 0;
+        self.print_distance(dist)
 
-        for (int i = 1; i <= V - 1; i++) {
-            for (Edge edge : edges) {
-                if (distance[edge.source] != Integer.MAX_VALUE && distance[edge.source] + edge.weight < distance[edge.destination]) {
-                    distance[edge.destination] = distance[edge.source] + edge.weight;
-                }
-            }
-        }
+nv = int(input("Enter no. of vertices: "))
+ne = int(input("Enter no. of edges: "))
 
-        // Check for negative-weight cycles
-        for (Edge edge : edges) {
-            if (distance[edge.source] != Integer.MAX_VALUE && distance[edge.source] + edge.weight < distance[edge.destination]) {
-                System.out.println("Negative-weight cycle detected!");
-                return;
-            }
-        }
+g = Graph(nv)
 
-        // Print shortest distances from the source vertex
-        for (int i = 0; i < V; i++) {
-            System.out.println("Vertex " + i + ": Distance = " + distance[i]);
-        }
-    }
+print("Enter source, destination and weights of edges")
+for _ in range(ne):
+    s, d, w = map(int, input().split())
+    g.add_edge(s, d, w)
 
-    public static void main(String[] args) {
-        int V = 5; // Number of vertices
-        int E = 8; // Number of edges
-        BellmanFord graph = new BellmanFord(V, E);
+src = int(input("Enter source node: "))
 
-        // Add edges to the graph
-        graph.addEdge(0, 1, 5);
-        graph.addEdge(0, 2, 4);
-        graph.addEdge(1, 3, 3);
-        graph.addEdge(2, 1, 6);
-        graph.addEdge(3, 2, 2);
-        graph.addEdge(4, 3, 2);
-        graph.addEdge(4, 1, 1);
-
-        int source = 0; // Source vertex
-
-        graph.bellmanFord(source);
-    }
-}
+g.bellmanFord(src)
