@@ -16,7 +16,7 @@ public class Main {
             buf[i] = in.nextInt();
         }
 
-        System.out.println(String.format("%s\t%s\t%s\t%s\t%s","TimeΔt","P_size","accepted","sent","remaining"));
+        System.out.println(String.format("%s\t%s\t%s\t%s\t%s","Time_t","P_size","accepted","sent","remaining"));
 
         for (int i = 0; i < n; i++) { // Corrected: loop up to the number of packets, not the bucket capacity
             if (buf[i] != 0) {
