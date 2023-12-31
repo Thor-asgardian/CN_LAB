@@ -9,11 +9,11 @@ class Graph {
         this.vertices = new int[v][3];
     }
 
-    for (int i = 0; i < v; i++) {
-    	int s = vertices[i][0];
-    	int d = vertices[i][1];
-    	int w = vertices[i][2];
-	}
+    public void addEdge(int s, int d, int w) {
+        vertices[s][0] = s;
+        vertices[s][1] = d;
+        vertices[s][2] = w;
+    }
 
     public void printDistance(int[] dist) {
         System.out.println("Vertex\t\tDistance\n");
@@ -30,26 +30,26 @@ class Graph {
         dist[src] = 0;
 
         for (int k = 0; k < v - 1; k++) {
-            for (int[] edge : vertices) {
-    		int s = edge[0];
-    		int d = edge[1];
-    		int w = edge[2];
+            for (int i = 0; i < v; i++) {
+                int s = vertices[i][0];
+                int d = vertices[i][1];
+                int w = vertices[i][2];
 
-    		if (dist[s] != Integer.MAX_VALUE && dist[d] > dist[s] + w) {
-    		    dist[d] = dist[s] + w;
+                if (dist[s] != Integer.MAX_VALUE && dist[d] > dist[s] + w) {
+                    dist[d] = dist[s] + w;
                 }
             }
         }
 
-        for (int[] edge : vertices) {
-            int s = edge[0];
-            int d = edge[1];
-            int w = edge[2];
+        for (int i = 0; i < v; i++) {
+            int s = vertices[i][0];
+            int d = vertices[i][1];
+            int w = vertices[i][2];
 
             if (dist[s] != Integer.MAX_VALUE && dist[d] > dist[s] + w) {
-        		System.out.println("Graph has a negative cycle\n");
-        		return;
-		}
+                System.out.println("Graph has a negative cycle\n");
+                return;
+            }
         }
 
         printDistance(dist);
