@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Main {
+public class CRC {
     public static int crc(char[] ip, char[] op, char[] poly, int mode) {
         System.arraycopy(ip, 0, op, 0, ip.length);
         if (mode != 0) {
