@@ -37,13 +37,20 @@ Enter data for 2th frame>>2
 Enter data for 3th frame>>3
 Enter data for 4th frame>>4
 Enter data for 5th frame>>5
+
+
 Before Sorting>>
-seqNum->624,Data->1
-seqNum->751,Data->2
-seqNum->418,Data->3
-seqNum->48,Data->4
-seqNum->964,Data->5After sorting>>
-seqNum->48,Data->4
-seqNum->418,Data->3seqNum->624,Data->1seqNum->751,Data->2
-seqNum->964,Data->5
+seqNum->620,Data->1
+seqNum->521,Data->2
+seqNum->840,Data->3
+seqNum->758,Data->4
+seqNum->621,Data->5
+
+
+ After sorting>>
+seqNum->521,Data->2
+seqNum->620,Data->1
+seqNum->621,Data->5
+seqNum->758,Data->4
+seqNum->840,Data->3
 */
