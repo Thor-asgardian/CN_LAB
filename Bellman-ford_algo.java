@@ -1,104 +1,70 @@
 import java.util.Scanner;
 
-class Graph {
-    int v;
-    int[][] vertices;
+class Edge {
+        int source, destination, weight;
 
-    public Graph(int v) {
-        this.v = v;
-        this.vertices = new int[v][3];
-    }
-
-    public void addEdge(int s, int d, int w) {
-        this.vertices[s][0] = s;
-        this.vertices[s][1] = d;
-        this.vertices[s][2] = w;
-    }
-
-    public void printDistance(int[] dist) {
-        System.out.println("Vertex\t\tDistance");
-        for (int i = 0; i < v; i++) {
-            System.out.println(i + "\t\t" + dist[i]);
+        Edge(int source, int destination, int weight) {
+            this.source = source;
+            this.destination = destination;
+            this.weight = weight;
         }
     }
 
-    public void bellmanFord(int src) {
-        int[] dist = new int[v];
-        for (int i = 0; i < v; i++) {
-            dist[i] = Integer.MAX_VALUE;
+public class BellmanFord {
+
+    static void bellmanFord(int vertices, int source, Edge[] edges) {
+        int[] distance = new int[vertices];
+        for (int i = 0; i < vertices; i++) {
+            distance[i] = Integer.MAX_VALUE;
         }
-        dist[src] = 0;
+        distance[source] = 0;
 
-        for (int k = 0; k < v - 1; k++) {
-            for (int[] edge : vertices) {
-                int s = edge[0];
-                int d = edge[1];
-                int w = edge[2];
-
-                if (dist[s] != Integer.MAX_VALUE && dist[d] > dist[s] + w) {
-                    dist[d] = dist[s] + w;
+        for (int i = 0; i < vertices - 1; i++) {
+            for (Edge edge : edges) {
+                if (distance[edge.source] != Integer.MAX_VALUE && distance[edge.source] + edge.weight < distance[edge.destination]) {
+                    distance[edge.destination] = distance[edge.source] + edge.weight;
                 }
             }
         }
 
-        for (int[] edge : vertices) {
-            int s = edge[0];
-            int d = edge[1];
-            int w = edge[2];
-
-            if (dist[s] != Integer.MAX_VALUE && dist[d] > dist[s] + w) {
-                System.out.println("Graph has a negative cycle");
+          //Checking for negative edge cycle
+        for (Edge edge : edges) {
+            if (distance[edge.source] != Integer.MAX_VALUE && distance[edge.source] + edge.weight < distance[edge.destination]) {
+                System.out.println("Graph contains a negative cycle!");
                 return;
             }
         }
 
-        printDistance(dist);
+        System.out.println("Shortest distances from source vertex " + source + ":");
+        for (int i = 0; i < vertices; i++) {
+            System.out.println("To vertex " + i + ": " + distance[i]);
+        }
     }
-}
 
-public class Main {
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter no. of vertices: ");
-        int nv = in.nextInt();
+        System.out.print("Enter the number of vertices: ");
+        int vertices = scanner.nextInt();
 
-        System.out.print("Enter no. of edges: ");
-        int ne = in.nextInt();
+        System.out.print("Enter the source vertex: ");
+        int source = scanner.nextInt();
 
-        Graph g = new Graph(nv);
+        System.out.print("Enter the number of edges: ");
+        int edgesCount = scanner.nextInt();
 
-        System.out.println("Enter source, destination, and weights of edges");
-        for (int i = 0; i < ne; i++) {
-            int s = in.nextInt();
-            int d = in.nextInt();
-            int w = in.nextInt();
-            g.addEdge(s, d, w);
+
+        Edge[] edges = new Edge[edgesCount];
+        System.out.println("Enter edges (source destination weight):");
+        for (int i = 0; i < edgesCount; i++) {
+            int src = scanner.nextInt();
+            int dest = scanner.nextInt();
+            int weight = scanner.nextInt();
+            edges[i] = new Edge(src, dest, weight);
         }
 
-        System.out.print("Enter source node: ");
-        int src = in.nextInt();
+        bellmanFord(vertices, source, edges);
 
-        g.bellmanFord(src);
+        scanner.close();
     }
 }
-/* output sample:
-Enter no. of vertices: 5
-Enter no. of edges: 8
-Enter source, destination, and weights of edges
-0 1 6
-0 2 7
-1 3 5
-1 4 -4
-1 2 8
-2 3 -3
-2 4 9
-3 4 7
-Enter source node: 0
-Vertex		Distance
-0		0
-1		1
-2		7
-3		4
-4		-2
-*/
