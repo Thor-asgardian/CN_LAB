@@ -58,26 +58,26 @@ class Graph {
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner in = new Scanner(System.in);
 
         System.out.print("Enter no. of vertices: ");
-        int nv = scanner.nextInt();
+        int nv = in.nextInt();
 
         System.out.print("Enter no. of edges: ");
-        int ne = scanner.nextInt();
+        int ne = in.nextInt();
 
         Graph g = new Graph(nv);
 
         System.out.println("Enter source, destination, and weights of edges");
         for (int i = 0; i < ne; i++) {
-            int s = scanner.nextInt();
-            int d = scanner.nextInt();
-            int w = scanner.nextInt();
+            int s = in.nextInt();
+            int d = in.nextInt();
+            int w = in.nextInt();
             g.addEdge(s, d, w);
         }
 
         System.out.print("Enter source node: ");
-        int src = scanner.nextInt();
+        int src = in.nextInt();
 
         g.bellmanFord(src);
     }
