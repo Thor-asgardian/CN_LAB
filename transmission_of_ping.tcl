@@ -5,20 +5,6 @@ $ns trace-all $ntrace
 set namfile [open prog2.nam w]
 $ns namtrace-all $namfile
 
-proc Finish {} {
-    global ns ntrace namfile
-
-    $ns flush-trace
-    close $ntrace
-    close $namfile
-
-    exec nam prog2.nam &
-
-    set dropped_packets [exec grep "^d" prog2.tr | awk "{print \$5}" | grep -c "ping"]
-    puts "The number of ping packets dropped are $dropped_packets"
-    exit 0
-}
-
 set n0 [$ns node]
 set n1 [$ns node]
 set n2 [$ns node]
@@ -67,6 +53,27 @@ $ns at 1.0 "$p1 send"
 $ns at 1.2 "$cbr0 stop"
 $ns at 1.4 "$p0 send"
 $ns at 1.6 "$p1 send"
+proc Finish {} {
+    global ns ntrace namfile
+
+    $ns flush-trace
+    close $ntrace
+    close $namfile
+
+    exec nam prog2.nam &
+
+    set dropped_packets [exec grep "^d" prog2.tr | awk "{print \$5}" | grep -c "ping"]
+    puts "The number of ping packets dropped are $dropped_packets"
+    exit 0
+}
+
 $ns at 1.8 "Finish"
 
 $ns run
+#ns: Finish: 0
+#child process exited abnormally
+ #   while executing
+#"exec grep "^d" prog2.tr | awk "{print \$5}" | grep -c "ping""
+#   (procedure "Finish" line 10)
+#    invoked from within
+#"Finish"
