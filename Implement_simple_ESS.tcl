@@ -1,11 +1,8 @@
-#Create a ns simulator
 set ns [new Simulator]
 
-#Setup topography object
 set topo [new Topography]
 $topo load_flatgrid 1500 1500
 
-#Open the NS trace file
 set tracefile [open p4.tr w]
 $ns trace-all $tracefile
 
@@ -14,7 +11,6 @@ set namfile [open p4.nam w]
 $ns namtrace-all $namfile
 $ns namtrace-all-wireless $namfile 1500 1500
 
-#Mobile node parameter setup
 $ns node-config -adhocRouting DSDV \
 -llType LL \
 -macType Mac/802_11 \
@@ -28,9 +24,8 @@ $ns node-config -adhocRouting DSDV \
 -agentTrace ON \
 -routerTrace ON
 
-#Nodes Definition
 create-god 6
-#Create 6 nodes
+
 set n0 [$ns node]
 $n0 set X_ 630
 $n0 set Y_ 501
@@ -78,20 +73,15 @@ set sink1 [new Agent/TCPSink]
 $ns attach-agent $n5 $sink1
 $ns connect $tcp0 $sink1
 
-#Applications Definition
-#Setup a CBR Application over UDP connection
 set cbr0 [new Application/Traffic/CBR]
 $cbr0 attach-agent $udp0
 $cbr0 set packetSize_ 1000
 $cbr0 set rate_ 1.0Mb
 $cbr0 set random_ null
 
-#Setup a FTP Application over TCP connection
 set ftp0 [new Application/FTP]
 $ftp0 attach-agent $tcp0
 
-#Termination
-#Define a 'finish' procedure
 proc finish {} {
 global ns tracefile namfile
 $ns flush-trace
