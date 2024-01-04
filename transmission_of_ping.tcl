@@ -6,17 +6,17 @@ set namfile [open prog2.nam w]
 $ns namtrace-all $namfile
 
 proc Finish {} {
-global ns ntrace namfile
+    global ns ntrace namfile
 
-$ns flush-trace
-close $ntrace
-close $namfile
+    $ns flush-trace
+    close $ntrace
+    close $namfile
 
-exec nam prog2.nam &
+    exec nam prog2.nam &
 
-puts "The number of ping packets dropped are "
-exec grep "^d" prog2.tr | cut -d " " -f 5 | grep -c "ping" &
-exit 0
+    set dropped_packets [exec grep "^d" prog2.tr | awk "{print \$5}" | grep -c "ping"]
+    puts "The number of ping packets dropped are $dropped_packets"
+    exit 0
 }
 
 set n0 [$ns node]
@@ -33,25 +33,25 @@ $ns duplex-link $n3 $n4 1Mb 10ms DropTail
 $ns duplex-link $n4 $n5 1Mb 10ms DropTail
 
 Agent/Ping instproc recv {from rtt} {
-$self instvar node_
-puts "node [$node_ id] received ping answer from $from with round trip time $rtt ms"
+    $self instvar node_
+    puts "node [$node_ id] received ping answer from $from with round trip time $rtt ms"
 }
 
 set p0 [new Agent/Ping]
 $p0 set class_ 1
-$ns attach-agent $n(0) $p0
+$ns attach-agent $n0 $p0
 set p1 [new Agent/Ping]
-$ns attach-agent $n(5) $p1
+$ns attach-agent $n5 $p1
 $ns connect $p0 $p1
 
-$ns queue-limit $n(2) $n(3) 2
-$ns duplex-link-op $n(2) $n(3) queuePos 0.5
+$ns queue-limit $n2 $n3 2
+$ns duplex-link-op $n2 $n3 queuePos 0.5
 
 set tcp0 [new Agent/TCP]
 $tcp0 set class_ 2
-$ns attach-agent $n(2) $tcp0
+$ns attach-agent $n2 $tcp0
 set sink0 [new Agent/TCPSink]
-$ns attach-agent $n(4) $sink0
+$ns attach-agent $n4 $sink0
 $ns connect $tcp0 $sink0
 
 set cbr0 [new Application/Traffic/CBR]
