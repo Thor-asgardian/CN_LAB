@@ -1,10 +1,6 @@
 #Create Simulator
 set ns [new Simulator]
 
-#Use colors to differentiate the traffic
-$ns color 1 Blue
-$ns color 2 Red
-
 #Open trace and NAM trace file
 set ntrace [open prog2.tr w]
 $ns trace-all $ntrace
@@ -30,14 +26,19 @@ exit 0
 }
 
 #Create six nodes
-for {set i 0} {$i < 6} {incr i} {
-set n($i) [$ns node]
-}
+set n0 [$ns node]
+set n1 [$ns node]
+set n2 [$ns node]
+set n3 [$ns node]
+set n4 [$ns node]
+set n5 [$ns node]
 
 #Connect the nodes
-for {set j 0} {$j < 5} {incr j} {
-$ns duplex-link $n($j) $n([expr ($j+1)]) 0.1Mb 10ms DropTail
-}
+$ns duplex-link $n0 $n1 1Mb 10ms DropTail
+$ns duplex-link $n1 $n2 1Mb 10ms DropTail
+$ns duplex-link $n2 $n3 1Mb 10ms DropTail
+$ns duplex-link $n3 $n4 1Mb 10ms DropTail
+$ns duplex-link $n4 $n5 1Mb 10ms DropTail
 
 #Define the recv function for the class 'Agent/Ping'
 Agent/Ping instproc recv {from rtt} {
@@ -51,7 +52,6 @@ set p0 [new Agent/Ping]
 $p0 set class_ 1
 $ns attach-agent $n(0) $p0
 set p1 [new Agent/Ping]
-$p1 set class_ 1
 $ns attach-agent $n(5) $p1
 $ns connect $p0 $p1
 
