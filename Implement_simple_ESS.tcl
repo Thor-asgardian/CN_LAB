@@ -24,7 +24,7 @@ $ns node-config -adhocRouting DSDV \
 -agentTrace ON \
 -routerTrace ON
 
-create-god 6
+create-god 4
 
 set n0 [$ns node]
 $n0 set X_ 630
@@ -46,16 +46,6 @@ $n3 set X_ 270
 $n3 set Y_ 190
 $n3 set Z_ 0.0
 $ns initial_node_pos $n3 20
-set n4 [$ns node]
-$n4 set X_ 539
-$n4 set Y_ 131
-$n4 set Z_ 0.0
-$ns initial_node_pos $n4 20
-set n5 [$ns node]
-$n5 set X_ 964
-$n5 set Y_ 177
-$n5 set Z_ 0.0
-$ns initial_node_pos $n5 20
 
 #Agents Definition
 #Setup a UDP connection
@@ -64,7 +54,6 @@ $ns attach-agent $n0 $udp0
 set null1 [new Agent/Null]
 $ns attach-agent $n4 $null1
 $ns connect $udp0 $null1
-$udp0 set packetSize_ 1500
 
 #Setup a TCP connection
 set tcp0 [new Agent/TCP]
@@ -100,7 +89,8 @@ $ns at 2.0 "$ftp0 start"
 $ns at 180.0 "$ftp0 stop"
 $ns at 200.0 "$cbr0 stop"
 $ns at 200.0 "finish"
-$ns at 70 "$n4 set dest 100 60 20"
-$ns at 100 "$n4 set dest 700 300 20"
-$ns at 150 "$n4 set dest 900 200 20"
+$ns at 70 "$n0 set dest 100 60 20"
+$ns at 100 "$n1 set dest 700 300 20"
+$ns at 150 "$n2 set dest 900 200 20"
+$ns at 150 "$n3 set dest 800 500 30"
 $ns run
