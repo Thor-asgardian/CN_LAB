@@ -70,10 +70,3 @@ proc Finish {} {
 $ns at 1.8 "Finish"
 
 $ns run
-#ns: Finish: 0
-#child process exited abnormally
- #   while executing
-#"exec grep "^d" prog2.tr | awk "{print \$5}" | grep -c "ping""
-#   (procedure "Finish" line 10)
-#    invoked from within
-#"Finish"
