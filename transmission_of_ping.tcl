@@ -53,6 +53,7 @@ $ns at 1.0 "$p1 send"
 $ns at 1.2 "$cbr0 stop"
 $ns at 1.4 "$p0 send"
 $ns at 1.6 "$p1 send"
+
 proc Finish {} {
     global ns ntrace namfile
 
@@ -62,7 +63,7 @@ proc Finish {} {
 
     exec nam prog2.nam &
 
-    set dropped_packets [exec grep "^d" prog2.tr | awk "{print \$5}" | grep -c "ping"]
+    set dropped_packets [exec grep "^d" prog2.tr | awk "{print \$6}" | grep -c "ping"]
     puts "The number of ping packets dropped are $dropped_packets"
     exit 0
 }
