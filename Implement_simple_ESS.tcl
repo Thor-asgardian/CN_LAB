@@ -46,15 +46,12 @@ $n3 set Y_ 190
 $n3 set Z_ 0.0
 $ns initial_node_pos $n3 20
 
-#Agents Definition
-#Setup a UDP connection
 set udp0 [new Agent/UDP]
 $ns attach-agent $n0 $udp0
 set null1 [new Agent/Null]
 $ns attach-agent $n4 $null1
 $ns connect $udp0 $null1
 
-#Setup a TCP connection
 set tcp0 [new Agent/TCP]
 $ns attach-agent $n3 $tcp0
 set sink1 [new Agent/TCPSink]
@@ -80,7 +77,6 @@ exec nam p4.nam &
 exec echo "Number of packets dropped is:" & 
 exec grep -c "^D" p4.tr &
 exit 0
-
 }
 
 $ns at 1.0 "$cbr0 start"
