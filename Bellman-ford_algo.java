@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+
 class Edge {
         int source, destination, weight;
 
@@ -68,3 +69,41 @@ public class BellmanFord {
         scanner.close();
     }
 }
+
+/*
+ OUTPUT
+
+ Enter the number of vertices: 6
+ Enter the source vertex: 0
+ Enter the number of edges: 7
+ Enter edges (source destination weight):
+ 0 1 5
+ 1 3 2
+ 1 2 1
+ 2 4 1
+ 3 5 2
+ 4 3 -1
+ 5 4 -3
+ Graph contains a negative cycle!
+
+ Enter the number of vertices: 6
+ Enter the source vertex: 0
+ Enter the number of edges: 9
+ Enter edges (source destination weight):
+ 0 1 6
+ 0 2 4
+ 0 3 5
+ 1 4 -1
+ 2 1 -2
+ 2 4 3
+ 3 2 -2
+ 3 5 -1
+ 4 5 3
+ Shortest distances from source vertex 0:
+ To vertex 0: 0
+ To vertex 1: 1
+ To vertex 2: 3
+ To vertex 3: 5
+ To vertex 4: 0
+ To vertex 5: 3
+*/
