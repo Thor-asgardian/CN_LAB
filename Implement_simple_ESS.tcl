@@ -6,7 +6,6 @@ $topo load_flatgrid 1500 1500
 set tracefile [open p4.tr w]
 $ns trace-all $tracefile
 
-#Open the NAM trace file
 set namfile [open p4.nam w]
 $ns namtrace-all $namfile
 $ns namtrace-all-wireless $namfile 1500 1500
